@@ -4,9 +4,11 @@ const Content = ({parts}) => {
   return (
     <div>
     {parts.map(part => {
-      return  (<p>
+      return  (
+        <p key={part.name}>
         {part.name} {part.exercises}
-      </p>)
+        </p>
+      )
     })}
     </div>
   )
