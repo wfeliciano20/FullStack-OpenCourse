@@ -1,5 +1,4 @@
 
-
 const Content = ({part1, part2, part3, exercises1, exercises2, exercises3}) => {
   return (
     <>
