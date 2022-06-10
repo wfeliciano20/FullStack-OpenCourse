@@ -21,6 +21,9 @@ const Statistics = ({goodFeedback,neutralFeedback,badFeedback}) => {
   
   return (
     <>
+        <p>good {`${goodFeedback}`}</p>
+        <p>neutral {`${neutralFeedback}`}</p>
+        <p>bad {`${badFeedback}`}</p>
         <p>all {`${total}`}</p>
         <p>average {`${average}`}</p>
         <p>positive {`${positive} %`}</p>

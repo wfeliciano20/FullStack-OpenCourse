@@ -28,9 +28,6 @@ function App() {
       </div>
       <h2>statistics</h2>
       <div>
-        <p>good {`${good}`}</p>
-        <p>neutral {`${neutral}`}</p>
-        <p>bad {`${bad}`}</p>
         <Statistics goodFeedback={good} neutralFeedback={neutral} badFeedback={bad} />
       </div>
     </div>
