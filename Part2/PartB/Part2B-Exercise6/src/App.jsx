@@ -9,6 +9,7 @@ const App = () => {
   const handleOnSubmit = e =>{
     e.preventDefault();
     setPersons(persons.concat({ name: newName }));
+    setNewName('');
   }
 
   return (
