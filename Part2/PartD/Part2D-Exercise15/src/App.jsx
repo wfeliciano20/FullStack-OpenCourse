@@ -62,6 +62,7 @@ const App = () => {
     setPersons(persons.concat(personToAdd));
     await axios.post('http://localhost:3001/persons', personToAdd);
     setNewName('');
+    setNewNumber('');
   }
   
 
