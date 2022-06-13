@@ -48,6 +48,9 @@ const DisplayResults = ({message,filteredCountries , searchTerm}) => {
   const handleShowInfo = (country,e) => {
     setCountry(country);
     setShowExtraInfo(true);
+    setShowMessage(false);
+    setShowCountry(false);
+    setShowCountries(false);
   }
 
   return(
