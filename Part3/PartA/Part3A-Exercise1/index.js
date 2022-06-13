@@ -24,7 +24,7 @@ let persons = [{
     }
 ]
 
-app.get('/persons', (req, res) => {
+app.get('/api/persons', (req, res) => {
     res.json(persons);
 });
 
