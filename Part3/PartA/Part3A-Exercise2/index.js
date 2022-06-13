@@ -28,5 +28,10 @@ app.get('/api/persons', (req, res) => {
     res.json(persons);
 });
 
+app.get('/info', (req, res) => {
+    let now = new Date();
+    let total = persons.length;
+    res.send(`<div><p><strong>Phonebook has info for: ${total} people</strong></p> <p><strong>${now}</strong></p></div>`);
+})
 
 app.listen(PORT, () => console.log(`Server running on  http://localhost:${PORT}`));
