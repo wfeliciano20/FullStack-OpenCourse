@@ -10,7 +10,7 @@ const Country = ({country}) => {
       <h2>languages</h2>
       <ul>
         {
-          Object.entries(country.languages).forEach(
+          Object.entries(country.languages).map(
           ([key, language]) => <li key={language}>{language}</li>)
         }
       </ul> 
