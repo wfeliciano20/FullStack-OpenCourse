@@ -63,7 +63,8 @@ app.post('/api/persons', (req, res) => {
 
     } else {
         const random = Math.floor(Math.random() * 5000000);
-        while (persons.indexOf(person => person.id === random) !== -1) {
+        const found = persons.find(persons => persons.id === random);
+        while (found) {
             random = Math.floor(Math.random() * 5000000);
         }
 
