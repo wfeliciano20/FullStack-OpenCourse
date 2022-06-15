@@ -1,0 +1,15 @@
+{
+    "name": "part3c-exercise12",
+    "version": "1.0.0",
+    "description": "",
+    "main": "mongo.js",
+    "scripts": {
+        "start": "node mongo.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "William Feliciano",
+    "license": "MIT",
+    "dependencies": {
+        "mongoose": "^6.3.8"
+    }
+}
