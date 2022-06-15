@@ -20,7 +20,11 @@ const App = () => {
         const data = await api.getPersons();
         setPersons(data);
       }catch(e){
-        console.error(e);
+        setNotificationType('error');
+        setMessage(`${e.message}`);
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000);
       }
       
     }
@@ -58,9 +62,9 @@ const App = () => {
       return;
     }
 
-    if(!newNumber.match(/^\d{3}-{1}\d{3}-{1}\d{4}$/g)){
+    if((!newNumber.match(/^\d{2}-\d{7}$/)) && (!newNumber.match(/^\d{3}-\d{8}$/))){
         setNotificationType('error');
-        setMessage(`${newNumber} is not a valid number. Please use ###-###-#### format`);
+        setMessage(`${newNumber} is not a valid number. Please use one of this ##-####### or ###-########`);
         setTimeout(() => {
           setMessage(null)
         }, 5000);
@@ -93,7 +97,7 @@ const App = () => {
           }, 5000);
         } catch (e) {
           setNotificationType('error');
-          setMessage(`${newName} couldn't be updated`);
+          setMessage(`${e.message}`);
           setTimeout(() => {
             setMessage(null)
           }, 5000);
@@ -129,7 +133,7 @@ const App = () => {
       }, 5000)
     }catch (e) {
       setNotificationType('error');
-      setMessage(`${personToAdd.name} was not saved on server`);
+      setMessage(`${e.message}`);
     }
     
   }
