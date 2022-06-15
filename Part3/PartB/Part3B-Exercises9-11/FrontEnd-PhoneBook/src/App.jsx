@@ -21,7 +21,7 @@ const App = () => {
         setPersons(data);
       }catch(e){
         setNotificationType('error');
-        setMessage(`${e.message}`);
+        setMessage(`${e.response.data.error}`);
         setTimeout(() => {
           setMessage(null)
         }, 5000);
@@ -82,7 +82,7 @@ const App = () => {
           setNewNumber('');
         }catch(e){
           setNotificationType('error');
-          setMessage(`${e.message}`);
+          setMessage(`${e.response.data.error}`);
           setTimeout(() => {
             setMessage(null)
           }, 5000);
@@ -97,12 +97,11 @@ const App = () => {
           }, 5000);
         } catch (e) {
           setNotificationType('error');
-          setMessage(`${e.message}`);
+          setMessage(`${e.response.data.error}`);
           setTimeout(() => {
             setMessage(null)
           }, 5000);
         }
-        
         return;
       }
       setNewName('');
@@ -121,7 +120,6 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    setPersons(persons.concat(personToAdd));
     try{
       await api.addPerson(personToAdd);
       setNewName('');
@@ -133,8 +131,21 @@ const App = () => {
       }, 5000)
     }catch (e) {
       setNotificationType('error');
-      setMessage(`${e.message}`);
+      setMessage(`${e.response.data.error}`);
+      setTimeout(() => {
+            setMessage(null)
+      }, 5000);
     }
+    try {
+          const data = await api.getPersons();
+          setPersons(data);
+        } catch (e) {
+          setNotificationType('error');
+          setMessage(`${e.response.data.error}`);
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000);
+        }
     
   }
 
@@ -151,7 +162,7 @@ const App = () => {
         }, 5000);
     }catch(e) {
       setNotificationType('error');
-      setMessage(`${e.message}`);
+      setMessage(`${e.response.data.error}`);
       setTimeout(() => {
           setMessage(null)
         }, 5000);
