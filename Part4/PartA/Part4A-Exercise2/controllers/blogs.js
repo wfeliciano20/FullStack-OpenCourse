@@ -1,13 +1,10 @@
 const express = require('express')
 const Blog = require('../models/blog')
-const logger = require('../utils/loggers')
 const blogsRouter = express.Router()
 
 blogsRouter.get('/', async(req, res, next) => {
   try {
     const response = await Blog.find({}).exec()
-    logger.info('blogs fetched')
-    logger.info(response)
     res.json(response)
   } catch (error) {
     next(error)
