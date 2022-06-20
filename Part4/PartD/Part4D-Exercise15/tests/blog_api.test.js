@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const supertest = require('supertest');
 const app = require('../app');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const api = supertest(app);
 
 const initialBlogs = [
@@ -20,11 +22,35 @@ const initialBlogs = [
 ];
 
 beforeEach(async () => {
+    await User.deleteMany({});
     await Blog.deleteMany({});
     let BlogObject = new Blog(initialBlogs[0]);
     await BlogObject.save();
     BlogObject = new Blog(initialBlogs[1]);
     await BlogObject.save();
+    const salt = bcrypt.genSaltSync(10);
+    let hash = bcrypt.hashSync('doe123', salt);
+    const newUser = new User({
+        username: 'jdoe1',
+        name: 'John Doe',
+        passwordHash: hash
+    });
+    await newUser.save();
+    hash = bcrypt.hashSync('Doe345', salt);
+    const newUser2 = new User({
+        username: 'janed1',
+        name: 'Jane Doe',
+        passwordHash: hash
+    });
+    await newUser2.save();
+    hash = bcrypt.hashSync('jackD123', salt);
+    const newUser3 = new User({
+        username: 'jackdoe',
+        name: 'Jack Doe',
+        passwordHash: hash
+    });
+    await newUser3.save();
+
 });
 
 describe('there are 2 blogs initially',()=>{
@@ -62,28 +88,33 @@ describe('there are 2 blogs initially',()=>{
 describe('sending post request', () => {
 
     test('Check that doing post increases the amount of blogs',async () => {
+        const users = await User.find({}).exec();
+        expect(users).toHaveLength(3);
         const newBlog = {
             title: 'Learning API testing',
-            author: 'Jake Doe',
+            author: users[2].name,
             url: 'http://localhost:3003/api/blogs',
-            likes:30
+            likes:30,
+            userId: users[2].id
         };
         await api.post('/api/blogs').send(newBlog);
         const blogs = await api.get('/api/blogs');
         expect(blogs.body).toHaveLength(initialBlogs.length + 1);
-    });
+    },10000);
 
     test('Check that doing post without the likes will default likes to 0',async () => {
+        const users = await User.find({}).exec();
         const newBlog = {
             title: 'Learning API testing',
-            author: 'Jake Doe',
+            author: users[2].name,
             url: 'http://localhost:3003/api/blogs',
+            userId: users[2].id,
         };
         await api.post('/api/blogs').send(newBlog);
         const blogs = await api.get('/api/blogs');
         const response = blogs.body.map(blog=>blog);
         expect(response[blogs.body.length - 1].likes).toBe(0);
-    });
+    },10000);
 
     test('Check if title and url are missing from the post request the response has status code 400',async () => {
         const newBlog = {
@@ -96,7 +127,7 @@ describe('sending post request', () => {
             expect(error.response.status).toBe(400);
         }
 
-    });
+    }, 10000);
 
 });
 

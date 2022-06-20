@@ -27,8 +27,6 @@ describe('when there is initially one user in db', () => {
 
     test('creation succeeds with a fresh username', async() => {
         const response = await api.get('/api/users');
-        // convert response to objects
-
         const usersAtStart = JSON.parse(response.text);
         expect(usersAtStart).toHaveLength(1);
 
@@ -47,11 +45,11 @@ describe('when there is initially one user in db', () => {
         const response2 = await api.get('/api/users');
         const usersEnd = JSON.parse(response2.text);
         const usersAtEnd = usersEnd;
-        expect(usersAtEnd.length).toBe(usersAtStart.length + 1);
+        expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
 
         const usernames = usersAtEnd.map(u => u.username);
         expect(usernames).toContain(newUser.username);
-    },15000);
+    },10000);
 
     test('creation fails with proper statuscode and message if username already taken', async() => {
         const response = await api.get('/api/users');

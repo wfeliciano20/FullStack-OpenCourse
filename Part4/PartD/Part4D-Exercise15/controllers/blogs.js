@@ -5,7 +5,7 @@ const blogsRouter = express.Router();
 
 blogsRouter.get('/', async(req, res, next) => {
     try {
-        const response = await Blog.find({}).populate('user', {username:1,name:1}).exec();
+        const response = await Blog.find({}).populate('user', { username: 1, name: 1 }).exec();
         res.json(response);
     } catch (error) {
         next(error);
@@ -22,17 +22,17 @@ blogsRouter.get('/:id', async(req, res, next) => {
 });
 
 blogsRouter.post('/', async(req, res, next) => {
-    const {title,author,url,likes, userId} =req.body;
-    if(title && author && url && userId){
-        const user = await User.findById(userId);
-        if(!user){
-            res.status(400).json({error:'user not found'});
+    const { title, author, url, likes, userId } = req.body;
+    if (title && author && url && userId) {
+        const user = await User.findById(userId).exec();
+        if (!user) {
+            res.status(400).json({ error: 'user not found' });
         }
         const blog = new Blog({
             title,
             author,
             url,
-            likes: likes||0,
+            likes: likes || 0,
             user: user._id
         });
         try {
@@ -43,6 +43,8 @@ blogsRouter.post('/', async(req, res, next) => {
         } catch (error) {
             next(error);
         }
+    } else {
+        res.status(400).json({ error: 'title, author, url and userId are required' });
     }
 });
 
