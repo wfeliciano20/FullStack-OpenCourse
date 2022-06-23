@@ -4,29 +4,30 @@ const config = require('../utils/config');
 const loginRouter = require('express').Router();
 const User = require('../models/user');
 
-loginRouter.post('/', async(request, response) => {
-    const { username, password } = request.body;
-    const user = await User.findOne({ username });
-  
-    const passwordCorrect = user === null ? false : bcrypt.compareSync(password, user.passwordHash);
+loginRouter.post('/', async (request, response) => {
+  const { username, password } = request.body;
+  const user = await User.findOne({ username });
 
-    if (!(user && passwordCorrect)) {
-        return response.status(401).json({
-            error: 'invalid username or password'
-        });
-    }
+  const passwordCorrect =
+    user === null ? false : bcrypt.compareSync(password, user.passwordHash);
 
-    const userForToken = {
-        username: user.username,
-        id: user._id,
-    };
+  if (!(user && passwordCorrect)) {
+    return response.status(401).json({
+      error: 'invalid username or password',
+    });
+  }
 
-    // eslint-disable-next-line no-undef
-    const token = jwt.sign(userForToken, config.SECRET,{ expiresIn: 60*60 });
+  const userForToken = {
+    username: user.username,
+    id: user._id,
+  };
 
-    response
-        .status(200)
-        .send({ token, username: user.username, name: user.name });
+  // eslint-disable-next-line no-undef
+  const token = jwt.sign(userForToken, config.SECRET, { expiresIn: 60 * 60 });
+
+  response
+    .status(200)
+    .send({ token, username: user.username, name: user.name });
 });
 
 module.exports = loginRouter;

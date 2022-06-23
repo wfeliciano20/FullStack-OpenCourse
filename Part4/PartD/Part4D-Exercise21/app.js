@@ -13,14 +13,16 @@ logger.info('connecting to db...');
 
 // eslint-disable-next-line no-undef
 mongoose.connect(config.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
-db.on('error', (err) => logger.error('error connecting to MongoDB:', err.message));
+db.on('error', (err) =>
+  logger.error('error connecting to MongoDB:', err.message),
+);
 db.once('open', () => {
-    logger.info('connected to MongoDB');
+  logger.info('connected to MongoDB');
 });
 app.use(middleware.tokenExtractor);
 app.use(cors());
