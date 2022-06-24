@@ -1,6 +1,8 @@
 {
     "spaces": 2,
-    "useSpaces": true,
+    "useSpaces": false,
+    "tabWidth": 1,
+    "useTabs": true,
     "semi": true,
     "singleQuote": true,
     "trailingComma": "all",
