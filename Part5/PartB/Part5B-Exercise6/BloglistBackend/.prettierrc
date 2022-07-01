@@ -1,0 +1,12 @@
+{
+    "spaces": 2,
+    "useSpaces": false,
+    "tabWidth": 1,
+    "useTabs": true,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 80,
+    "useFlowCommas": true,
+    "eslintIntegration": true
+}
