@@ -11,15 +11,6 @@ const LoginForm = ({
 	notification,
 	notificationType,
 }) => {
-	LoginForm.propTypes = {
-		handleLogin: PropTypes.func.isRequired,
-		setUsername: PropTypes.func.isRequired,
-		setPassword: PropTypes.func.isRequired,
-		username: PropTypes.string.isRequired,
-		password: PropTypes.string.isRequired,
-		notification: PropTypes.string.isRequired,
-		notificationType: PropTypes.string.isRequired,
-	};
 
 	return (
 		<div>
@@ -49,5 +40,15 @@ const LoginForm = ({
 		</div>
 	);
 };
+
+LoginForm.propTypes = {
+		handleLogin: PropTypes.func.isRequired,
+		setUsername: PropTypes.func.isRequired,
+		setPassword: PropTypes.func.isRequired,
+		username: PropTypes.string.isRequired,
+		password: PropTypes.string.isRequired,
+		notification: PropTypes.string.isRequired,
+		notificationType: PropTypes.string.isRequired,
+	};
 
 export default LoginForm;
