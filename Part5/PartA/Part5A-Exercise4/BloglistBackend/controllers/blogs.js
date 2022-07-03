@@ -27,7 +27,7 @@ blogsRouter.post('/', async (req, res, next) => {
 	const { title, author, url, likes } = req.body;
 	const { token, user } = req;
 
-	if (!token || !req.user) {
+	if (!token || !user) {
 		res.status(401).json({ error: 'token missing or invalid' }).end();
 	}
 
@@ -73,25 +73,32 @@ blogsRouter.put('/:id', async (req, res, next) => {
 
 blogsRouter.delete('/:id', async (req, res, next) => {
 	const { token, user, params } = req;
-	let blog;
 	try {
-		blog = await Blog.findById(params.id).exec();
-		if (!token || !req.user) {
+		const blog = await Blog.findById(params.id)
+			.populate('user', { username: 1, name: 1, id: 1 })
+			.exec();
+		if (!token || !user) {
 			res.status(401).json({ error: 'token missing or invalid' }).end();
 		}
-
-		if (blog.user.toString().id !== user.id) {
-			res.status(401).json({ error: 'user not authorized' }).end();
+		// check that the user.id  is not equal to blog.user.id
+		if (blog.user.id !== user.id) {
+			res.status(401).json({ error: 'user not authorized' }).send().end();
+		} else {
+			try {
+				await Blog.findByIdAndDelete(params.id).exec();
+				const userWhoDeleted = await User.findById(user.id).exec();
+				userWhoDeleted.blogs = userWhoDeleted.blogs.filter(
+					(blog) => blog.toString() !== params.id,
+				);
+				await userWhoDeleted.save();
+				res.status(204).end();
+			} catch (error) {
+				next(error);
+			}
 		}
 	} catch (error) {
 		res.status(404).json({ error: 'blog not found' }).end();
-	}
-
-	try {
-		await Blog.findByIdAndDelete(params.id).exec();
-		res.status(204).end();
-	} catch (error) {
-		next(error);
+		return;
 	}
 });
 
