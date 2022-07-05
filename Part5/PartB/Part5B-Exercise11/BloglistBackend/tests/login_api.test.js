@@ -44,7 +44,7 @@ describe('only valid user and password will login', () => {
 			.post('/api/login')
 			.send({ username: 'root', password: 'secret' });
 		expect(result.status).toBe(200);
-		expect(result.body).toHaveProperty('token');
+		expect(result.body).toHaveProperty('accessToken');
 	}, 10000);
 });
 

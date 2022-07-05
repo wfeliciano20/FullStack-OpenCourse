@@ -102,7 +102,7 @@ describe('sending post request', () => {
 			.post('/api/login')
 			.send({ username: 'jackdoe', password: 'jackD123' });
 		user3LoginResponse = JSON.parse(user3LoginResponse.text);
-		expect(user3LoginResponse).toHaveProperty('token');
+		expect(user3LoginResponse).toHaveProperty('accessToken');
 		const newBlog = {
 			title: 'Learning API testing',
 			author: users[2].name,
@@ -112,7 +112,7 @@ describe('sending post request', () => {
 		};
 		await api
 			.post('/api/blogs')
-			.set('Authorization', 'bearer ' + user3LoginResponse.token)
+			.set('Authorization', 'bearer ' + user3LoginResponse.accessToken)
 			.send(newBlog);
 		const blogs = await api.get('/api/blogs');
 		expect(blogs.body).toHaveLength(initialBlogs.length + 1);
@@ -130,10 +130,10 @@ describe('sending post request', () => {
 			.post('/api/login')
 			.send({ username: 'jackdoe', password: 'jackD123' });
 		user3LoginResponse = JSON.parse(user3LoginResponse.text);
-		expect(user3LoginResponse).toHaveProperty('token');
+		expect(user3LoginResponse).toHaveProperty('accessToken');
 		await api
 			.post('/api/blogs')
-			.set('Authorization', 'bearer ' + user3LoginResponse.token)
+			.set('Authorization', 'bearer ' + user3LoginResponse.accessToken)
 			.send(newBlog);
 		const blogs = await api.get('/api/blogs');
 		const response = blogs.body.map((blog) => blog);
@@ -150,10 +150,10 @@ describe('sending post request', () => {
 				.post('/api/login')
 				.send({ username: 'jdoe1', password: 'doe123' });
 			user1LoginResponse = JSON.parse(user1LoginResponse.text);
-			expect(user1LoginResponse).toHaveProperty('token');
+			expect(user1LoginResponse).toHaveProperty('accessToken');
 			await api
 				.post('/api/blogs')
-				.set('Authorization', 'bearer ' + user1LoginResponse.token)
+				.set('Authorization', 'bearer ' + user1LoginResponse.accessToken)
 				.send(newBlog);
 		} catch (error) {
 			expect(error.response.status).toBe(400);
@@ -193,7 +193,7 @@ describe('delete request', () => {
 		try {
 			await api
 				.delete(`/api/blogs/${blogToBeDeletedId}`)
-				.set('Authorization', 'bearer ' + incorrectLoginResponse.token);
+				.set('Authorization', 'bearer ' + incorrectLoginResponse.accessToken);
 		} catch (e) {
 			expect(e.response.status).toBe(401);
 			expect(e.response.message).toBe('user not authorized');
@@ -211,7 +211,7 @@ describe('delete request', () => {
 		const correctLoginResponse = JSON.parse(loginCorrectUserResponse.text);
 		await api
 			.delete('/api/blogs/' + ids[0])
-			.set('Authorization', 'bearer ' + correctLoginResponse.token);
+			.set('Authorization', 'bearer ' + correctLoginResponse.accessToken);
 		const blogs = await api.get('/api/blogs');
 		expect(blogs.body).toHaveLength(initialBlogs.length - 1);
 	}, 10000);
@@ -226,7 +226,7 @@ describe('delete request', () => {
 		try {
 			await api
 				.delete('/api/blogs/' + '5a3d5e3')
-				.set('Authorization', 'bearer ' + loginResponse.token);
+				.set('Authorization', 'bearer ' + loginResponse.accessToken);
 		} catch (error) {
 			expect(error.response.status).toBe(404);
 			expect(error.response.message).toBe('blog not found');

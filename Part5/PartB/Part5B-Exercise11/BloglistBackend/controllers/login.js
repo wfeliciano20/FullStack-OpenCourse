@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 loginRouter.post('/', async (request, response) => {
 	const { username, password } = request.body;
-	const user = await User.findOne({ username });
+	let user = await User.findOne({ username });
 
 	const passwordCorrect =
 		user === null ? false : bcrypt.compareSync(password, user.passwordHash);
@@ -23,9 +23,30 @@ loginRouter.post('/', async (request, response) => {
 	};
 
 	// eslint-disable-next-line no-undef
-	const token = jwt.sign(userForToken, config.SECRET, { expiresIn: 60 * 60 });
+	const accessToken = jwt.sign(userForToken, config.SECRET, {
+		expiresIn: '1h',
+	});
 
-	response.status(200).send({ token, username: user.username, name: user.name });
+	const refreshToken = jwt.sign(userForToken, config.REFRESH_SECRET, {
+		expiresIn: '1d',
+	});
+
+	const userWithRefresh = new User({
+		username: user.username,
+		name: user.name,
+		passwordHash: user.passwordHash,
+		blogs: user.blogs,
+		refreshToken: refreshToken,
+	});
+	await userWithRefresh.save();
+
+	response.cookie('jwt', refreshToken, {
+		httpOnly: true,
+		maxAge: 24 * 60 * 60 * 1000,
+	});
+	response
+		.status(200)
+		.send({ accessToken, username: user.username, name: user.name });
 });
 
 module.exports = loginRouter;

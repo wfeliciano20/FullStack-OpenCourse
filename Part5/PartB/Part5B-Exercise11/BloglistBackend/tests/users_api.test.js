@@ -32,9 +32,7 @@ describe('only valid users are created', () => {
 		const newUser = { name: 'ang', username: 'newUser', password: 'se' };
 		const result = await api.post('/api/users').send(newUser);
 		expect(result.status).toBe(400);
-		expect(result.body.error).toBe(
-			'password must be at least 3 characters long',
-		);
+		expect(result.body.error).toBe('password must be at least 3 characters long');
 		const usersAtEnd = await User.find({}).exec();
 		expect(usersAtEnd).toHaveLength(usersAtStart.length);
 	});
