@@ -29,7 +29,7 @@ describe('only valid user and password will login', () => {
 			.send({ username: 'invalid', password: 'secret' });
 		expect(result.status).toBe(401);
 		expect(result.body.error).toBe('invalid username or password');
-	});
+	}, 10000);
 
 	test('login fails with invalid password', async () => {
 		const result = await api
@@ -37,7 +37,7 @@ describe('only valid user and password will login', () => {
 			.send({ username: 'root', password: 'invalid' });
 		expect(result.status).toBe(401);
 		expect(result.body.error).toBe('invalid username or password');
-	});
+	}, 10000);
 
 	test('login succeeds with valid credentials', async () => {
 		const result = await api

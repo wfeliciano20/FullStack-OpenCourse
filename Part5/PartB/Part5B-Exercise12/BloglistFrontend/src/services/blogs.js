@@ -1,5 +1,6 @@
-import axios from 'axios';
-const baseUrl = '/api/blogs';
+import { axiosPrivate as axios } from '../api/axios';
+import axiosDefault from '../api/axios';
+const baseUrl = '/blogs';
 
 let token = null;
 
@@ -8,7 +9,7 @@ const setToken = (newToken) => {
 };
 
 const getAll = () => {
-	const request = axios.get(baseUrl);
+	const request = axiosDefault.get(baseUrl);
 	return request.then((response) => response.data);
 };
 

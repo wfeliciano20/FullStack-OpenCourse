@@ -15,7 +15,7 @@ describe('only valid users are created', () => {
 		await User.deleteMany({}).exec();
 		const user = new User(intialUsers[0]);
 		await user.save();
-	});
+	}, 10000);
 
 	test('creation fails with too short name', async () => {
 		const usersAtStart = await User.find({}).exec();

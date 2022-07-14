@@ -1,14 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
-import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import CreateBlogForm from './components/CreateBlogForm';
 import Togglable from './components/Togglable';
+import useAuth from './hooks/useAuth';
+import useBlogService from './hooks/useBlogService';
 
 const App = () => {
+	const [getAll, create] = useBlogService();
+	const { auth, setAuth } = useAuth();
 	const [blogs, setBlogs] = useState([]);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -21,7 +24,7 @@ const App = () => {
 	useEffect(() => {
 		const fetchTodos = async () => {
 			try {
-				const blogs = await blogService.getAll();
+				const blogs = await getAll();
 				const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
 				setBlogs(sortedBlogs);
 			} catch (error) {
@@ -38,15 +41,6 @@ const App = () => {
 		setRefetch(false);
 	}, [refetch]);
 
-	useEffect(() => {
-		const loggedUserJSON = window.localStorage.getItem('loggedBloglistAppUser');
-		if (loggedUserJSON) {
-			const user = JSON.parse(loggedUserJSON);
-			setUser(user);
-			blogService.setToken(user.token);
-		}
-	}, []);
-
 	const handleLogin = async (event) => {
 		event.preventDefault();
 
@@ -56,11 +50,7 @@ const App = () => {
 				password,
 			});
 			setUser(user);
-			window.localStorage.setItem(
-				'loggedBloglistAppUser',
-				JSON.stringify(user),
-			);
-			blogService.setToken(user.token);
+			setAuth(user);
 			setUsername('');
 			setPassword('');
 		} catch (error) {
@@ -95,7 +85,7 @@ const App = () => {
 	const handleCreateBlog = async (newBlog) => {
 		const { title, author, url } = newBlog;
 		try {
-			const createdBlog = await blogService.create({
+			const createdBlog = await create({
 				title: title,
 				author: author,
 				url: url,

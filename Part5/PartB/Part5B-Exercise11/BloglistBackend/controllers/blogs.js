@@ -1,6 +1,7 @@
 const express = require('express');
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const logger = require('../utils/loggers');
 const blogsRouter = express.Router();
 
 blogsRouter.get('/', async (req, res, next) => {
@@ -27,6 +28,7 @@ blogsRouter.post('/', async (req, res, next) => {
 	const { title, author, url, likes } = req.body;
 	const { token, user } = req;
 
+	logger.info('inside post user is', user);
 	if (!token || !user) {
 		res.status(401).json({ error: 'token missing or invalid' }).end();
 	}

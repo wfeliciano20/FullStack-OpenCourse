@@ -1,12 +1,15 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
-import blogService from '../services/blogs';
+import useBlogService from '../hooks/useBlogService';
 
 const Blog = ({ blog, setNotification, setNotificationType, setRefetch }) => {
+	const [getAll, create, update, deleteBlog] = useBlogService();
+
 	const [showAll, setShowAll] = useState(false);
 	const handleLike = async (e) => {
 		e.preventDefault();
 		try {
-			await blogService.update(blog.id, {
+			await update(blog.id, {
 				title: blog.title,
 				author: blog.author,
 				url: blog.url,
@@ -27,7 +30,7 @@ const Blog = ({ blog, setNotification, setNotificationType, setRefetch }) => {
 		e.preventDefault();
 		try {
 			if (window.confirm(`Are you sure you want to delete ${blog.title}?`)) {
-				await blogService.deleteBlog(blog.id);
+				await deleteBlog(blog.id);
 				setRefetch(true);
 			}
 		} catch (error) {

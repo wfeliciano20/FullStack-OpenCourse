@@ -1,6 +1,7 @@
 const express = require('express');
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const logger = require('../utils/loggers');
 const blogsRouter = express.Router();
 
 blogsRouter.get('/', async (req, res, next) => {
@@ -27,22 +28,19 @@ blogsRouter.post('/', async (req, res, next) => {
 	const { title, author, url, likes } = req.body;
 	const { token, user } = req;
 
+	logger.info('inside post user is', user);
 	if (!token || !user) {
 		res.status(401).json({ error: 'token missing or invalid' }).end();
 	}
 
 	if (title && author && url) {
 		//const user = await User.findById(userId).exec();
-		const userFound = await User.findById(user.id).exec();
-		if (!userFound) {
-			res.status(400).json({ error: 'user not found' }).end();
-		}
 		const blog = new Blog({
 			title,
 			author,
 			url,
 			likes: likes || 0,
-			user: userFound._id,
+			user: user._id,
 		});
 		try {
 			user.blogs = user.blogs.concat(blog._id);
@@ -78,23 +76,22 @@ blogsRouter.delete('/:id', async (req, res, next) => {
 			.populate('user', { username: 1, name: 1, id: 1 })
 			.exec();
 		if (!token || !user) {
-			res.status(401).json({ error: 'token missing or invalid' }).end();
+			return res.status(401).json({ error: 'token missing or invalid' });
 		}
 		// check that the user.id  is not equal to blog.user.id
 		if (blog.user.id !== user.id) {
-			res.status(401).json({ error: 'user not authorized' }).send().end();
-		} else {
-			try {
-				await Blog.findByIdAndDelete(params.id).exec();
-				const userWhoDeleted = await User.findById(user.id).exec();
-				userWhoDeleted.blogs = userWhoDeleted.blogs.filter(
-					(blog) => blog.toString() !== params.id,
-				);
-				await userWhoDeleted.save();
-				res.status(204).end();
-			} catch (error) {
-				next(error);
-			}
+			return res.status(401).json({ error: 'user not authorized' }).send().end();
+		}
+		try {
+			await Blog.findByIdAndDelete(params.id).exec();
+			const userWhoDeleted = await User.findById(user.id).exec();
+			userWhoDeleted.blogs = userWhoDeleted.blogs.filter(
+				(blog) => blog.toString() !== params.id,
+			);
+			await userWhoDeleted.save();
+			res.status(204).end();
+		} catch (error) {
+			next(error);
 		}
 	} catch (error) {
 		res.status(404).json({ error: 'blog not found' }).end();

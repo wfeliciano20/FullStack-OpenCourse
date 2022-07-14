@@ -11,7 +11,6 @@ const LoginForm = ({
 	notification,
 	notificationType,
 }) => {
-
 	return (
 		<div>
 			<Notification message={notification} type={notificationType} />
@@ -42,13 +41,13 @@ const LoginForm = ({
 };
 
 LoginForm.propTypes = {
-		handleLogin: PropTypes.func.isRequired,
-		setUsername: PropTypes.func.isRequired,
-		setPassword: PropTypes.func.isRequired,
-		username: PropTypes.string.isRequired,
-		password: PropTypes.string.isRequired,
-		notification: PropTypes.string.isRequired,
-		notificationType: PropTypes.string.isRequired,
-	};
+	handleLogin: PropTypes.func.isRequired,
+	setUsername: PropTypes.func.isRequired,
+	setPassword: PropTypes.func.isRequired,
+	username: PropTypes.string.isRequired,
+	password: PropTypes.string.isRequired,
+	notification: PropTypes.string.isRequired,
+	notificationType: PropTypes.string.isRequired,
+};
 
 export default LoginForm;
