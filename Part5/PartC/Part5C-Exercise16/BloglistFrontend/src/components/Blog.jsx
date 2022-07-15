@@ -3,43 +3,43 @@ import { useState } from 'react';
 import useBlogService from '../hooks/useBlogService';
 
 const Blog = ({ blog, setNotification, setNotificationType, setRefetch }) => {
-	// const [getAll, create, update, deleteBlog] = useBlogService();
+	const [getAll, create, update, deleteBlog] = useBlogService();
 
 	const [showAll, setShowAll] = useState(false);
 	const handleLike = async (e) => {
 		e.preventDefault();
-		// try {
-		// 	await update(blog.id, {
-		// 		title: blog.title,
-		// 		author: blog.author,
-		// 		url: blog.url,
-		// 		likes: blog.likes + 1,
-		// 		user: blog.user.id,
-		// 	});
-		// 	setRefetch(true);
-		// } catch (error) {
-		// 	setNotification(`Error: ${error.response.data.error}`);
-		// 	setNotificationType('error');
-		// 	setTimeout(() => {
-		// 		setNotification(null);
-		// 	}, 5000);
-		// }
+		try {
+			await update(blog.id, {
+				title: blog.title,
+				author: blog.author,
+				url: blog.url,
+				likes: blog.likes + 1,
+				user: blog.user.id,
+			});
+			setRefetch(true);
+		} catch (error) {
+			setNotification(`Error: ${error.response.data.error}`);
+			setNotificationType('error');
+			setTimeout(() => {
+				setNotification(null);
+			}, 5000);
+		}
 	};
 
 	const handleDelete = async (e) => {
 		e.preventDefault();
-		// try {
-		// 	if (window.confirm(`Are you sure you want to delete ${blog.title}?`)) {
-		// 		await deleteBlog(blog.id);
-		// 		setRefetch(true);
-		// 	}
-		// } catch (error) {
-		// 	setNotification(`Error: ${error.response.data.error}`);
-		// 	setNotificationType('error');
-		// 	setTimeout(() => {
-		// 		setNotification(null);
-		// 	}, 5000);
-		// }
+		try {
+			if (window.confirm(`Are you sure you want to delete ${blog.title}?`)) {
+				await deleteBlog(blog.id);
+				setRefetch(true);
+			}
+		} catch (error) {
+			setNotification(`Error: ${error.response.data.error}`);
+			setNotificationType('error');
+			setTimeout(() => {
+				setNotification(null);
+			}, 5000);
+		}
 	};
 
 	if (!showAll) {
