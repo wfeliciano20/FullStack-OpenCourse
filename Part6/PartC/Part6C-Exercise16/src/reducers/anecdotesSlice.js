@@ -16,7 +16,7 @@ const asObject = (anecdote) => {
 };
 
 export const fetchAnecdotes = createAsyncThunk(
-	'filter/fetchAnecdotes',
+	'anecdotes/fetchAnecdotes',
 	async () => {
 		const response = await axios.get(baseUrl);
 		return response.data;
@@ -24,7 +24,7 @@ export const fetchAnecdotes = createAsyncThunk(
 );
 
 export const saveAnecdoteToDb = createAsyncThunk(
-    'filter/saveAnecdoteToDb',
+    'anecdotes/saveAnecdoteToDb',
     async (anecdote) => {
         const response = await axios.post(baseUrl, asObject(anecdote));
         return response.data;
