@@ -18,7 +18,7 @@ const resolvers = {
 			}
 			if (args.author) {
 				let foundAuthor = await Author.findOne({ name: args.author });
-				return await Book.find({ author: foundAuthor.name }).populate('author');
+				return await Book.find({ author: foundAuthor._id }).populate('author');
 			}
 			if (args.genre) {
 				return await Book.find({ genres: { $in: [args.genre] } }).populate(
@@ -40,12 +40,14 @@ const resolvers = {
 
 	Mutation: {
 		addBook: async (root, args) => {
-			let newAuthor;
 			const foundAuthor = await Author.findOne({ name: args.author });
 			if (!foundAuthor) {
-				newAuthor = await new Author({ name: args.author }).save();
+				let newAuthor = await new Author({ name: args.author }).save();
+				const newBookWithNewAuthor = new Book({ ...args, author: newAuthor });
+				await newBookWithNewAuthor.save();
+				return newBookWithNewAuthor;
 			}
-			const newBook = new Book({ ...args, author: newAuthor });
+			const newBook = new Book({ ...args, author: foundAuthor });
 			await newBook.save();
 			return newBook;
 		},
