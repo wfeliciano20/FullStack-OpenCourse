@@ -18,7 +18,7 @@ const Books = (props) => {
 	const { loading, error, data, refetch } = useQuery(ALL_BOOKS, options);
 
 	useSubscription(BOOK_ADDED, {
-		onData: ({ data }) => {
+		onData: ({ data, client }) => {
 			console.log('subscription');
 			alert(`New book added: ${data.bookAdded.title}`);
 			const addedBook = data.bookAdded;

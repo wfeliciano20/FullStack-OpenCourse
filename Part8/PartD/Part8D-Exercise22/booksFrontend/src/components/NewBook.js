@@ -1,4 +1,4 @@
-import { useMutation, useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { useState } from 'react';
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../Queries';
@@ -10,12 +10,15 @@ const NewBook = ({ redirect, show }) => {
 	const [published, setPublished] = useState('');
 	const [genre, setGenre] = useState('');
 	const [genres, setGenres] = useState([]);
-	const client = useApolloClient();
 
 	const [addBook] = useMutation(ADD_BOOK, {
-		update: (cache, { data: { addBook } }) => {
-			updateCache(client.cache, { query: ALL_BOOKS }, addBook);
-			updateCache(client.cache, { query: ALL_AUTHORS }, addBook.author);
+		// update: (cache, { data: { addBook } }) => {
+		// 	updateCache(client.cache, { query: ALL_BOOKS }, addBook);
+		// 	updateCache(client.cache, { query: ALL_AUTHORS }, addBook.author);
+		// },
+
+		update: (cache, response) => {
+			updateCache(cache, { query: ALL_BOOKS }, response.data.addPerson);
 		},
 		refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
 	});

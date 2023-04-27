@@ -16,7 +16,6 @@ const User = require('./models/User');
 const { MONGODB_URL, PORT, JWT_SECRET } = require('./utils/config');
 const logger = require('./utils/logger');
 const express = require('express');
-const { PubSub } = require('graphql-subscriptions');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 // const { SubscriptionServer } = require('subscriptions-transport-ws');
 // const { execute, subscribe } = require('graphql');
@@ -175,16 +174,13 @@ mongoose
 		expressMiddleware(server, {
 			context: async ({ req, res }) => {
 				const auth = req ? req.headers.authorization : null;
-				const pubSub = new PubSub();
-				let currentUser = null;
 				if (auth && auth.startsWith('Bearer ')) {
 					const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
 					currentUser = await User.findById(decodedToken.id);
+					return {
+						currentUser,
+					};
 				}
-				return {
-					currentUser,
-					pubSub,
-				};
 			},
 		})
 	);

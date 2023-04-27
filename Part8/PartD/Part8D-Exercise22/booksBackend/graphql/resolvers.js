@@ -3,6 +3,8 @@ const Book = require('../models/Book');
 const User = require('../models/User');
 const { GraphQLError } = require('graphql');
 const jwt = require('jsonwebtoken');
+const { PubSub } = require('graphql-subscriptions');
+const pubSub = new PubSub();
 
 const resolvers = {
 	Query: {
@@ -59,7 +61,6 @@ const resolvers = {
 	Mutation: {
 		addBook: async (root, args, context) => {
 			const currentUser = context.currentUser;
-			const pubSub = context.pubSub;
 
 			if (!currentUser) {
 				throw new GraphQLError('not authenticated', {
@@ -160,7 +161,7 @@ const resolvers = {
 	},
 	Subscription: {
 		bookAdded: {
-			subscribe: (root, args, { pubSub }) => pubSub.asyncIterator('BOOK_ADDED'),
+			subscribe: () => pubSub.asyncIterator('BOOK_ADDED'),
 		},
 	},
 };

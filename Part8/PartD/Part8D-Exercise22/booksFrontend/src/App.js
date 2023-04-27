@@ -5,6 +5,7 @@ import Books from './components/Books';
 import NewBook from './components/NewBook';
 import Recommendations from './components/Recommendations';
 import LoginForm from './components/LoginForm';
+// import { ALL_BOOKS } from './Queries';
 
 export const updateCache = (cache, query, addedBook) => {
 	const uniqByName = (a) => {
@@ -14,10 +15,12 @@ export const updateCache = (cache, query, addedBook) => {
 			return seen.has(k) ? false : seen.add(k);
 		});
 	};
-
-	cache.updateQuery(query, (data) => {
+	console.log('query', query);
+	cache.updateQuery(query, ({ allBooks }) => {
+		console.log('updateQuery' + JSON.stringify(allBooks));
+		console.log('updateQuery book' + addedBook.title);
 		return {
-			allBooks: uniqByName(data.concat(addedBook)),
+			allBooks: uniqByName(allBooks?.concat(addedBook)),
 		};
 	});
 };
