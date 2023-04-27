@@ -10,7 +10,7 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
-import { setContext } from '@apollo/client/link/context';
+import { setContext } from 'apollo-link-context';
 import App from './App';
 
 const authLink = setContext((_, { headers }) => {

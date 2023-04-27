@@ -1,7 +1,6 @@
-import { useQuery, useApolloClient, useSubscription } from '@apollo/client';
+import { useQuery, useApolloClient } from '@apollo/client';
 import { useState, useEffect } from 'react';
-import { ALL_BOOKS, BOOK_ADDED } from '../Queries';
-import { updateCache } from '../App';
+import { ALL_BOOKS } from '../Queries';
 
 const Books = (props) => {
 	const [allBooks, setAllBooks] = useState([]);
@@ -16,15 +15,6 @@ const Books = (props) => {
 	};
 
 	const { loading, error, data, refetch } = useQuery(ALL_BOOKS, options);
-
-	useSubscription(BOOK_ADDED, {
-		onData: ({ data, client }) => {
-			console.log('subscription');
-			alert(`New book added: ${data.bookAdded.title}`);
-			const addedBook = data.bookAdded;
-			updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
-		},
-	});
 
 	useEffect(() => {
 		if (data) {

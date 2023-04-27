@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useSubscription } from '@apollo/client';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import Recommendations from './components/Recommendations';
 import LoginForm from './components/LoginForm';
-// import { ALL_BOOKS } from './Queries';
+import { ALL_BOOKS, BOOK_ADDED } from './Queries';
 
 export const updateCache = (cache, query, addedBook) => {
 	const uniqByName = (a) => {
@@ -29,6 +29,15 @@ const App = () => {
 	const [page, setPage] = useState('authors');
 	const [token, setToken] = useState(null);
 	const client = useApolloClient();
+
+	useSubscription(BOOK_ADDED, {
+		onData: ({ data, client }) => {
+			console.log('subscription', JSON.stringify(data));
+			alert(`New book added: ${data.addedBook.title}`);
+			//const addedBook = data.data.bookAdded;
+			updateCache(client.cache, { query: ALL_BOOKS }, data.addedBook);
+		},
+	});
 
 	const logout = () => {
 		setToken(null);
