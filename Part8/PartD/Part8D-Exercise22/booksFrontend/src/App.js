@@ -7,7 +7,7 @@ import Recommendations from './components/Recommendations';
 import LoginForm from './components/LoginForm';
 import { ALL_BOOKS, BOOK_ADDED } from './Queries';
 
-export const updateCache = (cache, query, addedBook) => {
+export const updateCache = (cache, query, bookAdded) => {
 	const uniqByName = (a) => {
 		let seen = new Set();
 		return a.filter((item) => {
@@ -15,12 +15,13 @@ export const updateCache = (cache, query, addedBook) => {
 			return seen.has(k) ? false : seen.add(k);
 		});
 	};
-	console.log('query', query);
+	console.log('query outside update query', query);
 	cache.updateQuery(query, ({ allBooks }) => {
+		console.log('query', query);
 		console.log('updateQuery' + JSON.stringify(allBooks));
-		console.log('updateQuery book' + addedBook.title);
+		console.log('updateQuery book' + bookAdded.title);
 		return {
-			allBooks: uniqByName(allBooks?.concat(addedBook)),
+			allBooks: uniqByName(allBooks?.concat(bookAdded)),
 		};
 	});
 };
@@ -29,13 +30,18 @@ const App = () => {
 	const [page, setPage] = useState('authors');
 	const [token, setToken] = useState(null);
 	const client = useApolloClient();
+	console.log('Client', client, 'cache', client.cache);
 
 	useSubscription(BOOK_ADDED, {
-		onData: ({ data, client }) => {
+		onData: async ({ data }) => {
 			console.log('subscription', JSON.stringify(data));
-			alert(`New book added: ${data.addedBook.title}`);
+			alert(`New book added: ${data.data.bookAdded.title}`);
 			//const addedBook = data.data.bookAdded;
-			updateCache(client.cache, { query: ALL_BOOKS }, data.addedBook);
+			await updateCache(
+				client.cache,
+				{ query: ALL_BOOKS },
+				data.data.bookAdded
+			);
 		},
 	});
 
