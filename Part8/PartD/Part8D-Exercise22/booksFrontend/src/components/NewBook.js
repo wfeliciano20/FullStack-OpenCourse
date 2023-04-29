@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 
 import { useState } from 'react';
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../Queries';
-import { updateCache } from '../App';
+// import { updateCache } from '../App';
 
 const NewBook = ({ redirect, show }) => {
 	const [title, setTitle] = useState('');
@@ -17,10 +17,10 @@ const NewBook = ({ redirect, show }) => {
 		// 	updateCache(client.cache, { query: ALL_AUTHORS }, addBook.author);
 		// },
 
-		update: (cache, response) => {
-			console.log('im in');
-			updateCache(cache, { query: ALL_BOOKS }, response.data.addBook);
-		},
+		// update: (cache, response) => {
+		// 	console.log('im in');
+		// 	updateCache(cache, { query: ALL_BOOKS }, response.data.addBook);
+		// },
 		refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
 	});
 
@@ -33,7 +33,7 @@ const NewBook = ({ redirect, show }) => {
 
 		console.log('add book...');
 		let year = parseInt(published);
-		addBook({ variables: { title, published: year, author, genres } });
+		await addBook({ variables: { title, published: year, author, genres } });
 		redirect('books');
 		setTitle('');
 		setPublished('');

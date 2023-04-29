@@ -1,4 +1,6 @@
-const typeDefs = `
+const { gql } = require('apollo-server');
+
+const typeDefs = gql`
 	type User {
 		username: String!
 		favoriteGenre: String!
@@ -18,9 +20,8 @@ const typeDefs = `
 	}
 
 	type Subscription {
-    bookAdded: Book!
-  }
-
+		bookAdded: Book!
+	}
 
 	type Author {
 		name: String!
@@ -43,16 +44,10 @@ const typeDefs = `
 			published: Int!
 			author: String!
 			genres: [String!]!
-		): Book
+		): Book!
 		editAuthor(name: String!, setBornTo: Int!): Author
-		createUser(
-			username: String!
-			favoriteGenre: String!
-		): User
-		login(
-			username: String!
-			password: String!
-		): Token
+		createUser(username: String!, favoriteGenre: String!): User
+		login(username: String!, password: String!): Token
 	}
 `;
 

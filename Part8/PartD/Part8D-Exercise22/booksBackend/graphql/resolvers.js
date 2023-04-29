@@ -161,7 +161,7 @@ const resolvers = {
 	},
 	Subscription: {
 		bookAdded: {
-			subscribe: () => pubSub.asyncIterator('BOOK_ADDED'),
+			subscribe: () => pubSub.asyncIterator(['BOOK_ADDED']),
 		},
 	},
 };

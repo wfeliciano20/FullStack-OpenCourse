@@ -137,8 +137,6 @@ mongoose
 (async function () {
 	const app = express();
 
-	app.use(cors());
-
 	const httpServer = createServer(app);
 
 	const wsServer = new WebSocketServer({

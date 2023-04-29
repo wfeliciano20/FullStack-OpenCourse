@@ -15,7 +15,6 @@ export const updateCache = (cache, query, bookAdded) => {
 			return seen.has(k) ? false : seen.add(k);
 		});
 	};
-	console.log('query outside update query', query);
 	cache.updateQuery(query, ({ allBooks }) => {
 		console.log('query', query);
 		console.log('updateQuery' + JSON.stringify(allBooks));
@@ -33,15 +32,11 @@ const App = () => {
 	console.log('Client', client, 'cache', client.cache);
 
 	useSubscription(BOOK_ADDED, {
-		onData: async ({ data }) => {
+		onData: ({ data }) => {
 			console.log('subscription', JSON.stringify(data));
 			alert(`New book added: ${data.data.bookAdded.title}`);
 			//const addedBook = data.data.bookAdded;
-			await updateCache(
-				client.cache,
-				{ query: ALL_BOOKS },
-				data.data.bookAdded
-			);
+			updateCache(client.cache, { query: ALL_BOOKS }, data.data.bookAdded);
 		},
 	});
 
