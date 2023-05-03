@@ -23,6 +23,6 @@
 	},
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"project": "/users/williamfeliciano/documents/dev/fullstack-opencourse/Part9/PartB/Part9B-Exercise6/tsconfig.json"
+		"project": "./tsconfig.json"
 	}
 }
